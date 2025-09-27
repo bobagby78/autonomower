@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-
+import time
 #use GPIO physical pin layout
 GPIO.setmode(GPIO.BOARD)
 
@@ -48,14 +48,21 @@ rightRevBtn = 16
 ctrlBtns = [leftFwdBtn, leftRevBtn, rightFwdBtn, rightRevBtn]
 # set pins as input pins
 for pin in ctrlBtns:
-    GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+    GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+# while True:
+#     if (GPIO.input(leftFwdBtn) == False):
+#         print ('left fwd')
+#         time.sleep(0.05)
+#     if (GPIO.input(leftRevBtn) == False):
+#         print ('left rev')
+#     if (GPIO.input(rightFwdBtn) == False):
+#         print ('right fwd')
+#     if (GPIO.input(rightRevBtn) == False):
+#         print ('right rev')
 
 while True:
-    if (GPIO.input(leftFwdBtn) == GPIO.LOW):
-        print ('left fwd')
-#     if (GPIO.input(leftRevBtn)):
-#         print ('left rev')
-#     if (GPIO.input(rightFwdBtn)):
-#         print ('right fwd')
-#     if (GPIO.input(rightRevBtn)):
-#         print ('right rev')
+    for pin in ctrlBtns:
+        if (GPIO.input(pin) == False):
+            print (str(pin) + 'activated')
+            time.sleep(0.05)
