@@ -1,5 +1,4 @@
 import RPi.GPIO as GPIO
-from orca.guilabels import SPIEL
 
 #use GPIO physical pin layout
 GPIO.setmode(GPIO.BOARD)
@@ -11,9 +10,9 @@ GPIO.setmode(GPIO.BOARD)
 # Pin 5  **left reverse**       -----           Pin 6 (GND)
 # Pin 7  (GPIO 4/GPCLK0)        -----           Pin 8  **right forward**
 # Pin 9  (GND)                  -----           Pin 10 **right reverse**
-# Pin 11 (GPIO 17)              -----           Pin 12 (GPIO 18/PWM0)
-# Pin 13 (GPIO 27)              -----           Pin 14 (GND)
-# Pin 15 (GPIO 22)              -----           Pin 16 (GPIO 23)
+# Pin 11 **lftFwdBtn**          -----           Pin 12 **rtFwdBtn**
+# Pin 13 **lftRevBtn**          -----           Pin 14 (GND)
+# Pin 15 (GPIO 22)              -----           Pin 16 **rtRevBtn**
 # Pin 17 (3V3)                  -----           Pin 18 (GPIO 24)
 # Pin 19 (GPIO 10/MOSI)         -----           Pin 20 (GND)
 # Pin 21 (GPIO 9/MISO)          -----           Pin 22 (GPIO 25)
@@ -49,14 +48,14 @@ rightRevBtn = 16
 ctrlBtns = [leftFwdBtn, leftRevBtn, rightFwdBtn, rightRevBtn]
 # set pins as input pins
 for pin in ctrlBtns:
-    GPIO.setup(pin, GPIO.IN)
+    GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
 while True:
-    if (leftFwdBtn):
+    if (GPIO.input(leftFwdBtn) == GPIO.LOW):
         print ('left fwd')
-    if (leftRevBtn):
-        print ('left rev')
-    if (rightFwdBtn):
-        print ('right fwd')
-    if (rightRevBtn):
-        print ('right rev')
+#     if (GPIO.input(leftRevBtn)):
+#         print ('left rev')
+#     if (GPIO.input(rightFwdBtn)):
+#         print ('right fwd')
+#     if (GPIO.input(rightRevBtn)):
+#         print ('right rev')
