@@ -1,5 +1,8 @@
 import RPi.GPIO as GPIO
 import time
+from evdev import InputDevice, categorize, ecodes
+
+
 #use GPIO physical pin layout
 GPIO.setmode(GPIO.BOARD)
 
@@ -30,39 +33,61 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 #assign some pins for the motors
-leftForwardMotor = 3
-leftReverseMotor = 5
-rightForwardMotor = 8
-rightReverseMotor = 10
-motorPins = [leftForwardMotor, leftReverseMotor, rightForwardMotor, rightReverseMotor]
+ltFwdMtr = 3
+ltRevMtr = 5
+rtFwdMtr = 8
+rtRevMtr = 10
+motorPins = [ltFwdMtr, ltRevMtr, rtFwdMtr, rtRevMtr]
 
 # set pins as output pins
 for pin in motorPins:
     GPIO.setup(pin, GPIO.OUT)
+    
+#set up controller
+controller = InputDevice('/dev/input/event12')
+print (controller)
 
-#assign some pins for the inputs
-leftFwdBtn = 11
-leftRevBtn = 13
-rightFwdBtn = 12
-rightRevBtn = 16
-ctrlBtns = [leftFwdBtn, leftRevBtn, rightFwdBtn, rightRevBtn]
-# set pins as input pins
-for pin in ctrlBtns:
-    GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+def runMotors():
+	print('Running Motors')
+	#set all pins to off position
+	for pin in motorPins:
+		pin = GPIO.LOW
+	
+	for event in controller.read_loop():
+		if event.type == ecodes.EV_KEY:
+			print(str(event.code) + ' : ' + str(event.value))
+			
+			if event.code == 310:
+				if event.value == 1: 
+					ltFwdMtr = GPIO.HIGH
+					print('ltFwdMtr on')
+				if event.value == 0: 
+					ltFwdMtr = GPIO.LOW
+					print('ltFwdMtr off')
 
-# while True:
-#     if (GPIO.input(leftFwdBtn) == False):
-#         print ('left fwd')
-#         time.sleep(0.05)
-#     if (GPIO.input(leftRevBtn) == False):
-#         print ('left rev')
-#     if (GPIO.input(rightFwdBtn) == False):
-#         print ('right fwd')
-#     if (GPIO.input(rightRevBtn) == False):
-#         print ('right rev')
+			if event.code == 312:
+				if event.value == 1:
+					ltRevMtr = GPIO.HIGH
+					print('ltRevMtr on')
+				if event.value == 0:
+					ltRevMtr = GPIO.LOW
+					print('ltFwdMtr off')
+					
+			if event.code == 311:
+				if event.value == 1: 
+					ltFwdMtr = GPIO.HIGH
+					print('rtFwdMtr on')
+				if event.value == 0: 
+					ltFwdMtr = GPIO.LOW
+					print('ltFwdMtr off')
 
-while True:
-    for pin in ctrlBtns:
-        if (GPIO.input(pin) == False):
-            print (str(pin) + 'activated')
-            time.sleep(0.05)
+			if event.code == 313:
+				if event.value == 1:
+					ltRevMtr = GPIO.HIGH
+					print('ltRevMtr on')
+				if event.value == 0:
+					ltRevMtr = GPIO.LOW
+					print('ltFwdMtr off')
+	
+runMotors()
+
