@@ -29,6 +29,22 @@ GPIO.setmode(GPIO.BOARD)
 # Pin 37 (GPIO 26)              -----           Pin 38 (GPIO 20/MOSI)
 # Pin 39 (GND)                  -----           Pin 40 (GPIO 21/SCLK)
 
+#left motor wiring front to back
+# black = - (neg pole of motor)
+# red = + (pos pole of motor)
+# brown = ? VCC or ground
+# green = ? ground or VCC
+# blue = A (Hall Sensor A)
+# white = B (Hall Sensor B)
+
+#right motor wiring back to front 
+# black = - (neg pole of motor)
+# red = + (pos pole of motor)
+# yellow = ? VCC or ground
+# green = ? ground or VCC
+# blue = A (Hall Sensor A)
+# white = B (Hall Sensor B)
+
 #Suppress warnings
 GPIO.setwarnings(False)
 
@@ -42,6 +58,9 @@ motorPins = [ltFwdMtr, ltRevMtr, rtFwdMtr, rtRevMtr]
 # set pins as output pins
 for pin in motorPins:
     GPIO.setup(pin, GPIO.OUT)
+#set all motor pins to low, AKA off    
+for pin in motorPins:
+	pin = GPIO.LOW
     
 #set up controller
 controller = InputDevice('/dev/input/event12')
@@ -50,8 +69,6 @@ print (controller)
 def runMotors():
 	print('Running Motors')
 	#set all pins to off position
-	for pin in motorPins:
-		pin = GPIO.LOW
 	
 	for event in controller.read_loop():
 		if event.type == ecodes.EV_KEY:
@@ -60,6 +77,7 @@ def runMotors():
 			if event.code == 310:
 				if event.value == 1: 
 					ltFwdMtr = GPIO.HIGH
+					print(event.value)
 					print('ltFwdMtr on')
 				if event.value == 0: 
 					ltFwdMtr = GPIO.LOW
@@ -75,18 +93,18 @@ def runMotors():
 					
 			if event.code == 311:
 				if event.value == 1: 
-					ltFwdMtr = GPIO.HIGH
+					rtFwdMtr = GPIO.HIGH
 					print('rtFwdMtr on')
 				if event.value == 0: 
-					ltFwdMtr = GPIO.LOW
-					print('ltFwdMtr off')
+					rtFwdMtr = GPIO.LOW
+					print('rtFwdMtr off')
 
 			if event.code == 313:
 				if event.value == 1:
-					ltRevMtr = GPIO.HIGH
+					rtRevMtr = GPIO.HIGH
 					print('ltRevMtr on')
 				if event.value == 0:
-					ltRevMtr = GPIO.LOW
+					rtRevMtr = GPIO.LOW
 					print('ltFwdMtr off')
 	
 runMotors()
