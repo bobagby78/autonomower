@@ -9,10 +9,10 @@ GPIO.setmode(GPIO.BOARD)
 # Physical Pin Numbering (BOARD mode)
 # -----------------------------------
 # Pin 1  (3V3)                  -----           Pin 2 (5V)
-# Pin 3  **left forward**       -----           Pin 4 (5V)
-# Pin 5  **left reverse**       -----           Pin 6 (GND)
-# Pin 7  (GPIO 4/GPCLK0)        -----           Pin 8  **right forward**
-# Pin 9  (GND)                  -----           Pin 10 **right reverse**
+# Pin 3  **left forward** ORNG  -----           Pin 4 (5V)
+# Pin 5  **left reverse** RED   -----           Pin 6 (GND)
+# Pin 7  (GPIO 4/GPCLK0)        -----           Pin 8  **right forward** BLUE
+# Pin 9  (GND)                  -----           Pin 10 **right reverse** PURP
 # Pin 11 **lftFwdBtn**          -----           Pin 12 **rtFwdBtn**
 # Pin 13 **lftRevBtn**          -----           Pin 14 (GND)
 # Pin 15 (GPIO 22)              -----           Pin 16 **rtRevBtn**
@@ -60,7 +60,7 @@ for pin in motorPins:
     GPIO.setup(pin, GPIO.OUT)
 #set all motor pins to low, AKA off    
 for pin in motorPins:
-	pin = GPIO.LOW
+	GPIO.output(pin, GPIO.LOW)
     
 #set up controller
 controller = InputDevice('/dev/input/event12')
@@ -76,35 +76,35 @@ def runMotors():
 			
 			if event.code == 310:
 				if event.value == 1: 
-					ltFwdMtr = GPIO.HIGH
+					GPIO.output(ltFwdMtr, GPIO.HIGH)
 					print(event.value)
 					print('ltFwdMtr on')
 				if event.value == 0: 
-					ltFwdMtr = GPIO.LOW
+					GPIO.output(ltFwdMtr, GPIO.LOW)
 					print('ltFwdMtr off')
 
 			if event.code == 312:
 				if event.value == 1:
-					ltRevMtr = GPIO.HIGH
+					GPIO.output(ltRevMtr, GPIO.HIGH)
 					print('ltRevMtr on')
 				if event.value == 0:
-					ltRevMtr = GPIO.LOW
+					GPIO.output(ltRevMtr, GPIO.LOW)
 					print('ltFwdMtr off')
 					
 			if event.code == 311:
 				if event.value == 1: 
-					rtFwdMtr = GPIO.HIGH
+					GPIO.output(rtFwdMtr, GPIO.HIGH)
 					print('rtFwdMtr on')
 				if event.value == 0: 
-					rtFwdMtr = GPIO.LOW
+					GPIO.output(rtFwdMtr, GPIO.LOW)
 					print('rtFwdMtr off')
 
 			if event.code == 313:
 				if event.value == 1:
-					rtRevMtr = GPIO.HIGH
+					GPIO.output(rtRevMtr, GPIO.HIGH)
 					print('ltRevMtr on')
 				if event.value == 0:
-					rtRevMtr = GPIO.LOW
+					GPIO.output(rtRevMtr, GPIO.LOW)
 					print('ltFwdMtr off')
 	
 runMotors()

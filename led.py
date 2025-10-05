@@ -3,14 +3,14 @@
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
-GPIO.setup(29, GPIO.OUT)
+GPIO.setup(8, GPIO.OUT)
 while True:
 	print('led on')
-	GPIO.output(29, GPIO.HIGH)
+	GPIO.output(8, GPIO.HIGH)
 	time.sleep(1)
 	print('led off')
-	GPIO.output(29, GPIO.LOW)
+	GPIO.output(8, GPIO.LOW)
 	time.sleep(1)
 
